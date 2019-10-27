@@ -92,6 +92,7 @@
     "no-angle-bracket-type-assertion": true,
     "no-parameter-reassignment": true,
     "no-submodule-imports": false,
+    "variable-name": false,
     "prettier": [
       true, {
         "printWidth": 140,
