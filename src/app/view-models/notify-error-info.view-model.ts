@@ -40,6 +40,11 @@ export abstract class NotifyErrorInfoViewModel {
   protected setErrors(propertyName: string): void {
     const results = validateSync(this);
     const errorMsgs = results.filter((r) => r.property === propertyName).map((r) => Object.values(r.constraints));
-    this.errors.set(propertyName, errorMsgs.length > 0 ? errorMsgs.reduce((prev, current) => prev.concat(current)) : []);
+
+    if (errorMsgs.length > 0) {
+      this.errors.set(propertyName, errorMsgs.reduce((prev, current) => prev.concat(current)));
+    } else {
+      this.errors.delete(propertyName);
+    }
   }
 }
