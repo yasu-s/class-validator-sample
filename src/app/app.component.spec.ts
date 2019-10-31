@@ -1,29 +1,81 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  let component: AppComponent;
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent],
-    }).compileComponents();
-  }));
+      providers: [AppComponent],
+    });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    component = TestBed.get(AppComponent);
   });
 
-  it(`should have as title 'ng-sample'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('ng-sample');
+  describe('should create', () => {
+    it('ok', () => {
+      expect(component).toBeDefined();
+    });
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to ng-sample!');
+  describe('editData.name validate', () => {
+    it('ok', () => {
+      // exercise
+      component.editData.name = '12345678901234567890';
+
+      // verify
+      expect(component.editData.hasErrors).toBeFalsy();
+      expect(component.editData.getErrors('name').length).toBe(0);
+    });
+
+    it('empty', () => {
+      // exercise
+      component.editData.name = '';
+
+      // verify
+      expect(component.editData.hasErrors).toBeTruthy();
+      expect(component.editData.getErrors('name').length).toBe(1);
+      expect(component.editData.getErrors('name')[0]).toBe('name を入力してください。');
+    });
+
+    it('maxLength', () => {
+      // exercise
+      component.editData.name = '123456789012345678901';
+
+      // verify
+      expect(component.editData.hasErrors).toBeTruthy();
+      expect(component.editData.getErrors('name').length).toBe(1);
+      expect(component.editData.getErrors('name')[0]).toBe('name は 20文字以内で入力してください。');
+    });
+  });
+
+  describe('editData.age validate', () => {
+    it('ok', () => {
+      // exercise
+      component.editData.age = 20;
+
+      // verify
+      expect(component.editData.hasErrors).toBeFalsy();
+      expect(component.editData.getErrors('age').length).toBe(0);
+    });
+
+    it('max', () => {
+      // exercise
+      component.editData.age = 100;
+
+      // verify
+      expect(component.editData.hasErrors).toBeTruthy();
+      expect(component.editData.getErrors('age').length).toBe(1);
+      expect(component.editData.getErrors('age')[0]).toBe('age は 10～99で入力してください。');
+    });
+
+    it('min', () => {
+      // exercise
+      component.editData.age = 9;
+
+      // verify
+      expect(component.editData.hasErrors).toBeTruthy();
+      expect(component.editData.getErrors('age').length).toBe(1);
+      expect(component.editData.getErrors('age')[0]).toBe('age は 10～99で入力してください。');
+    });
   });
 });
